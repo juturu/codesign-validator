@@ -18,7 +18,12 @@ export default class CodeSignValidator {
         // fs.accessSync throws error if path doesn't exist/can't be read.
         fs.access(path.resolve(this.filePath), fs.constants.R_OK, async (err) => {
             if (!err) {
-                await this.validateSignature();
+                try {
+                    await this.validateSignature();
+                } catch (ex) {
+                    deferred.reject(err);
+                }
+                deferred.resolve();
             }
             else {
                 deferred.reject(err);
@@ -29,10 +34,10 @@ export default class CodeSignValidator {
 
     async validateSignature() {
         let fileExtension = this.getFileExtension();
-        if (os.platform() == 'darwin') {
+        if (os.platform() === 'darwin') {
             await this.validateMacSignature(fileExtension);
-        } else if (os.platform() == 'win32') {
-            //await this.validateWindowsSignature(fileExtension);
+        } else if (os.platform() === 'win32') {
+            await this.validateWinSignature();
         } else {
             // Linux is not implemented.
             throw new Error('Linux is not supported');
@@ -56,10 +61,11 @@ export default class CodeSignValidator {
         }
         console.log(`Executing command - ${command}`);
         cp.exec(command, (error, stdout, stderr) => {
+            console.log(`command Error - ${error}`);
             if (error) {
                 promise.reject(error);
             }
-            if (stdout.lastIndexOf(validationString) > 0) {
+            if (stdout.toString().includes(validationString)) {
                 promise.resolve();
             } else {
                 promise.reject(new Error('no signature'));
@@ -71,8 +77,27 @@ export default class CodeSignValidator {
 
     validateWinSignature() {
         let promise = utility.defer();
-        let command = `spctl --assess -vv ${this.filePath} --type `;
-        
+        let signToolPath = `c:\\Program Files (x86)\\Windows Kits\\10\\bin\\x86\\signtool.exe`;
+        let command = `\"${signToolPath}\" verify \"${this.filePath}\"`;
+        //let validationString = /No signature found/i;
+        let validationString = `No signature found`;
+        fs.access(path.resolve(signToolPath), fs.constants.R_OK, async (err) => {
+            if (err) {
+                promise.reject(err);
+            }
+            console.log(`Executing command - ${command}`);
+            cp.exec(command, (error, stdout, stderr) => {
+                console.log(`command output - ${error}`);
+                if (error && error.toString().includes(validationString)) {
+                    console.log('rejecting');
+                    promise.reject(new Error('no signature'));                
+                } else {
+                    promise.resolve();
+                }
+            });
+        });
+
+        return promise.promise;
     }
 
     getFileExtension() {

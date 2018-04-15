@@ -8,9 +8,9 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "test": "ava 'test/**/*.test.js'",
+    "test": "ava test\\lib\\index.test.js --timeout=1m",
     "test:watch": "npm run test -- --watch",
-    "lint": "esw lib/ test/",
+    "lint": "esw src/ test/",
     "lint:watch": "npm run lint -- --watch",
     "cover": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
@@ -22,7 +22,7 @@
     "README.md"
   ],
   "directories": {
-    "lib": "dist"
+    "dist": "dist"
   },
   "repository": {
     "type": "git",
