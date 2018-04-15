@@ -2,26 +2,27 @@
   "name": "codesign-validator",
   "version": "0.0.1",
   "description": "Validating codesign of files",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=6.0.0"
   },
   "scripts": {
+    "tsc": "tsc",
     "test": "ava 'test/**/*.test.js'",
     "test:watch": "npm run test -- --watch",
     "lint": "esw lib/ test/",
     "lint:watch": "npm run lint -- --watch",
     "cover": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "do-publish": "npm run lint && npm run cover && npm publish"
+    "do-publish": "npm run lint && npm run tsc && npm run cover && npm publish"
   },
   "files": [
-    "lib",
+    "dist",
     "LICENSE.md",
     "README.md"
   ],
   "directories": {
-    "lib": "lib"
+    "lib": "dist"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   "author": "Hari Juturu <juturu@live.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^9.6.5",
     "ava": "^0.18.2",
     "babel-register": "^6.24.0",
     "coveralls": "^2.12.0",
@@ -40,10 +42,10 @@
     "eslint-plugin-standard": "^2.1.1",
     "eslint-watch": "^3.0.1",
     "nyc": "^10.1.2",
-    "sinon": "^2.1.0"
+    "sinon": "^2.1.0",
+    "typescript": "^2.8.1"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "ava": {
     "require": [
       "babel-register"
