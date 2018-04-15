@@ -1,6 +1,6 @@
 # codesign-validator
 
-Validates codesign on files.
+Validates codesign on mac and windows files.
 
 ## `npm run` scripts
 
@@ -13,4 +13,10 @@ Validates codesign on files.
 * `npm run do-publish`: Used when publishing the package.
 
 ## Getting started
+
+```
+let signValidator = require('codesign-validator').CodeSignValidator;
+let signValidationInstance = new signValidator(path.join(versionDir.path(), file));
+await signValidationInstance.check();
+```
 
