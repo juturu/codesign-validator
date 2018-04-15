@@ -8,7 +8,7 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "test": "ava test\\lib\\index.test.js --timeout=1m",
+    "test": "ava test/lib/index.test.js --timeout=1m",
     "test:watch": "npm run test -- --watch",
     "lint": "esw src/ test/",
     "lint:watch": "npm run lint -- --watch",

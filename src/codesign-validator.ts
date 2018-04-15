@@ -60,6 +60,7 @@ export default class CodeSignValidator {
                 break;
         }
         console.log(`Executing command - ${command}`);
+        // cp.execSync(command);
         cp.exec(command, (error, stdout, stderr) => {
             console.log(`command Error - ${error}`);
             if (error) {
