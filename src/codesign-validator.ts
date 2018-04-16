@@ -78,9 +78,9 @@ export default class CodeSignValidator {
 
     validateWinSignature() {
         let promise = utility.defer();
+        // TODO: Improve this by using sigcheck from https://docs.microsoft.com/en-us/sysinternals/downloads/sigcheck
         let signToolPath = `c:\\Program Files (x86)\\Windows Kits\\10\\bin\\x86\\signtool.exe`;
         let command = `\"${signToolPath}\" verify \"${this.filePath}\"`;
-        //let validationString = /No signature found/i;
         let validationString = `No signature found`;
         fs.access(path.resolve(signToolPath), fs.constants.R_OK, async (err) => {
             if (err) {
