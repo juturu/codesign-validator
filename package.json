@@ -1,6 +1,6 @@
 {
   "name": "codesign-validator",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Validating codesign of files",
   "main": "dist/index.js",
   "engines": {
