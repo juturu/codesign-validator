@@ -60,19 +60,23 @@ export default class CodeSignValidator {
                 break;
         }
         console.log(`Executing command - ${command}`);
+        let isPromiseReject: boolean = false;
         // cp.execSync(command);
-        cp.exec(command, (error, stdout, stderr) => {
+        var processCodesign = cp.exec(command, (error, stdout, stderr) => {
             console.log(`command Error - ${error}`);
             if (error) {
                 promise.reject(error);
             }
-            if (stdout.toString().includes(validationString)) {
+            console.log('stdout:' + stdout);
+            console.log('stderr:' + stderr);
+        });
+        processCodesign.on('exit', (code: number) => {
+            if (code === 0) {
                 promise.resolve();
-            } else {
-                promise.reject(new Error('no signature'));
+            } else if (!isPromiseReject) {
+                promise.reject(new Error('Process exited with code:' + code));
             }
         });
-
         return promise.promise;
     }
 
