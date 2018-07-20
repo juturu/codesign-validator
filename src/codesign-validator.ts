@@ -46,19 +46,8 @@ export default class CodeSignValidator {
 
     validateMacSignature(fileExtension: string) {
         let promise = utility.defer();
-        let command = `spctl --assess -vv ${this.filePath} --type `;
+        let command = `codesign -dv --verbose=4 ${this.filePath}`;
         let validationString = `${this.filePath}: accepted`;
-        switch (fileExtension) {
-            case '.pkg':
-            case '.dmg':
-                // For PKG installer, spctl --assess --type install -vv <file_path>
-                command += 'install';
-                break;
-            default:
-                // For execute/opening file, spctl --assess --type exec -vv <file_path>
-                command += 'exec';
-                break;
-        }
         console.log(`Executing command - ${command}`);
         let isPromiseReject: boolean = false;
         // cp.execSync(command);
