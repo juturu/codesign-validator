@@ -46,7 +46,13 @@ export default class CodeSignValidator {
 
     validateMacSignature(fileExtension: string) {
         let promise = utility.defer();
-        let command = `codesign -dv --verbose=4 ${this.filePath}`;
+        let command;
+        if (fileExtension === '.pkg') {
+            command = `pkgutil --check-signature ${this.filePath}`;
+        } else {
+            command = `codesign -dv --verbose=4 ${this.filePath}`;
+        }
+
         let validationString = `${this.filePath}: accepted`;
         console.log(`Executing command - ${command}`);
         let isPromiseReject: boolean = false;
@@ -84,7 +90,7 @@ export default class CodeSignValidator {
                 console.log(`command output - ${error}`);
                 if (error && error.toString().includes(validationString)) {
                     console.log('rejecting');
-                    promise.reject(new Error('no signature'));                
+                    promise.reject(new Error('no signature'));
                 } else {
                     promise.resolve();
                 }
@@ -96,6 +102,6 @@ export default class CodeSignValidator {
 
     getFileExtension() {
         return this.filePath.substring(this.filePath.lastIndexOf('.'),
-                                       this.filePath.length).toLowerCase();
+            this.filePath.length).toLowerCase();
     }
 }
